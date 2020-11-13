@@ -1,0 +1,215 @@
+<!Doctype html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="Styles.css">
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript">
+		var RandomNumber = 0;
+		var enabled = false;
+		var Counter = 0;
+		var counterSet = false;
+		var SecondsLeft = 4;
+		var countdown;
+
+		function SubCounter() {
+			if (SecondsLeft > 0) {
+				SecondsLeft = SecondsLeft > 0.1 ? SecondsLeft - 0.1 : 0.0;
+				$("#TimeLeft").html(SecondsLeft.toFixed(2));
+			} else {
+				alert("Time's up!");
+				clearInterval(countdown);
+				GameOver();
+			}
+		}
+
+		function SetRandomNumber() {
+			console.log(Counter);
+			setTimeout(function() {
+				clearInterval(countdown);
+				countdown = setInterval(SubCounter, 100);
+				if (Counter >= 9) {
+					SecondsLeft = 3;
+				} else if (Counter < 9) {
+					SecondsLeft = 4;
+				}
+				if (!counterSet) {
+					Counter = 0;
+					counterSet = true;
+				} else Counter++;
+				$("h1#Counter").html(Counter);
+				enabled = true;
+				$("body").css("background-color", "white");
+				RandomNumber = Math.floor((Math.random() * 4) + 1);
+				$("#Arrow").css("transform", "none");
+				switch (RandomNumber) {
+					case 1:
+						$("#Arrow").css("transform", "rotate(-90deg)");
+						break;
+
+					case 2:
+						break;
+
+					case 3:
+						$("#Arrow").css("transform", "rotate(90deg)");
+						break;
+
+					case 4:
+						$("#Arrow").css("transform", "rotate(180deg)");
+						break;
+
+					default:
+						return;
+				}
+
+			}, 100);
+		}
+
+		function pointNoun(points) {
+			if (points === 1) return " point"
+			return " points"
+		}
+
+		function GameOver() {
+			$("#GameOver").css("display", "block");
+			$("body").css("overflow", "hidden");
+			$("#Points").html("You achieved " + Counter + pointNoun(Counter));
+			clearInterval(countdown);
+		}
+		$(document).ready(function() {
+			$("h1#Counter").append(Counter);
+			SetRandomNumber();
+			$(document).keydown(function(e) {
+				switch (e.which) {
+					case 37: // left
+						if (RandomNumber == 1) {
+							$("body").css("background-color", "green");
+							enabled = false;
+							SetRandomNumber();
+						} else if (RandomNumber != 1 && enabled == true) {
+							GameOver();
+						}
+						break;
+
+					case 38: // up
+						if (RandomNumber == 2) {
+							$("body").css("background-color", "green");
+							enabled = false;
+							SetRandomNumber();
+						} else if (RandomNumber != 2 && enabled == true) {
+							GameOver();
+						}
+						break;
+
+					case 39: // right
+						if (RandomNumber == 3) {
+							$("body").css("background-color", "green");
+							enabled = false;
+							SetRandomNumber();
+						} else if (RandomNumber != 3 && enabled == true) {
+							GameOver();
+						}
+						break;
+
+					case 40: // down
+						if (RandomNumber == 4) {
+							$("body").css("background-color", "green");
+							enabled = false;
+							SetRandomNumber();
+						} else if (RandomNumber != 1 && enabled == true) {
+							GameOver();
+						}
+						break;
+
+					default:
+						return; // exit this handler for other keys
+				}
+				e.preventDefault(); // prevent the default action (scroll / move caret)
+			});
+		});
+	</script>
+	<style>
+		h1 {
+			text-align: center;
+			font-family: Calibri, sans-serif;
+			font-size: 50px;
+		}
+
+		h1#Counter {
+			position: fixed;
+			top: 0px;
+			left: 20px;
+			text-decoration: none;
+			z-index: -1;
+		}
+
+		h1#TimeLeft {
+			text-decoration: none;
+		}
+
+		#GameOver {
+			width: 100vw;
+			height: 100vh;
+			background-color: red;
+			color: white;
+			z-index: 100;
+			display: block;
+			margin-top: -34px;
+			margin-left: -8px;
+			display: none;
+      text-align: center;
+		}
+
+		#Points {
+			font-family: sans-serif;
+			text-align: center;
+		}
+
+		#Wrapper {
+			width: 1000px;
+			margin: 0 auto;
+		}
+
+		#Arrow {
+			width: 20%;
+			margin-left: 40%;
+			margin-bottom: 50px;
+			-webkit-transition-duration: 0.05s;
+			-moz-transition-duration: 0.05;
+			-o-transition-duration: 0.05s;
+			transition-duration: 0.05s;
+
+
+
+			-webkit-transition-property: -webkit-transform;
+			-moz-transition-property: -moz-transform;
+			-o-transition-property: -o-transform;
+			transition-property: transform;
+		}
+
+    #Reload {
+      background-color: white;
+      color: black;
+      padding: 10px;
+      cursor: pointer;
+      border-color: black;
+    }
+	</style>
+</head>
+
+<body>
+	<div id="GameOver">
+		<h1>GAME OVER!</h1>
+		<h2 id="Points"></h2>
+    <button id="Reload" onClick="location.reload()">Play again</button>
+	</div>
+	<h1 id="Counter"></h1>
+	<div id="Wrapper">
+		<h1>Arrow Game</h1>
+		<img id="Arrow" src="Arrow.png"></img>
+	</div>
+	<h1 id="TimeLeft"></h1>
+</body>
+
+</html>
